@@ -16,6 +16,7 @@ using SharpGL;
 using SharpGL.Enumerations;
 using SharpGL.SceneGraph;
 using SharpGL.WPF;
+using static ComputerGrafic.MainWindow;
 
 namespace ComputerGrafic
 {
@@ -53,10 +54,27 @@ namespace ComputerGrafic
         int countGroups = 0;
         int currentGroup = 0;
         OpenGL gl;
+
+        public class ColorBox
+        {
+            public string col { get; set; } = "";
+            public int idCol { get; set; }
+            public override string ToString() => $"{col}";
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             GroupsPoints.Add(new GroupPoint(greenInt));
+
+            colorComboBox.ItemsSource = new ColorBox[]
+        {
+            new ColorBox { col = "Зеленый", idCol = 0},
+            new ColorBox { col = "Синий", idCol = 1},
+            new ColorBox { col = "Желтый", idCol = 2},
+            new ColorBox { col = "Красный", idCol = 3}
+        };
+            colorComboBox.SelectedIndex = 0;
         }
 
         private void OpenGLControl_OpenGLDraw(object sender, OpenGLRoutedEventArgs args)
@@ -93,6 +111,15 @@ namespace ComputerGrafic
             }
             gl.End();
             gl.Flush();
+        }
+
+        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GroupPoint group = new GroupPoint();
+            group.points = GroupsPoints[currentGroup].points;
+            if (colorComboBox.SelectedItem is ColorBox color_)
+                group.colorGroup = color_.idCol;
+            GroupsPoints[currentGroup] = group;
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -132,6 +159,7 @@ namespace ComputerGrafic
                     countGroups += 1;
                     currentGroup = countGroups;
                     GroupsPoints.Add(new GroupPoint(greenInt));
+                    colorComboBox.SelectedIndex = 0;
                 }
             }
             else if (e.Key == Key.Right)
@@ -209,6 +237,7 @@ namespace ComputerGrafic
                 if (currentGroup > 0)
                 {
                     currentGroup--;
+                    colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
                 }
             }
             else if (e.Key == Key.D)
@@ -216,6 +245,7 @@ namespace ComputerGrafic
                 if (currentGroup < countGroups-1)
                 {
                     currentGroup++;
+                    colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
                 }
             }
         }

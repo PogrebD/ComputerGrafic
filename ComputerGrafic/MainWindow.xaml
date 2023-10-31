@@ -12,14 +12,22 @@
         
         Title="MainWindow" Height="450" Width="800">
 
+
+
+
     <Grid Background="White">
-        <DockPanel LastChildFill="True">
-            <Button DockPanel.Dock="Top" Background="AliceBlue" Content="Верхняя кнопка" />
-            <Button DockPanel.Dock="Bottom" Background="BlanchedAlmond" Content="Нижняя кнопка" />
-            <Button DockPanel.Dock="Left" Background="Aquamarine" Content="Левая кнопка" />
-            <Button DockPanel.Dock="Right" Background="DarkGreen" Content="Правая кнопка" />
-            <Button Background="LightGreen" Content="Центр" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"></ColumnDefinition >
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DockPanel LastChildFill="True" Grid.Column="1">
+            <StackPanel DockPanel.Dock="Right" Background="DarkGreen">
+                <TextBlock>Текст1</TextBlock>
+                <TextBlock Text="Текст2" />
+                <ComboBox x:Name="colorComboBox" SelectionChanged="ColorComboBox_SelectionChanged" />
+            </StackPanel>
+
         </DockPanel>
-        <sharpGL:OpenGLControl  MouseDown="Grid_MouseDown" x:Name ="OpenglControl_" OpenGLDraw="OpenGLControl_OpenGLDraw" OpenGLInitialized="OpenGLControl_OpenGLInitialized" Resized="OpenGLControl_Resized"/>
+        <sharpGL:OpenGLControl MouseDown="Grid_MouseDown" x:Name ="OpenglControl_" OpenGLDraw="OpenGLControl_OpenGLDraw" OpenGLInitialized="OpenGLControl_OpenGLInitialized" Resized="OpenGLControl_Resized"/>
     </Grid>
 </Window>
