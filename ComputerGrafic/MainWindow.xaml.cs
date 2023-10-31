@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -51,6 +52,8 @@ namespace ComputerGrafic
         };
 
         public List<GroupPoint> GroupsPoints = new List<GroupPoint>();
+        Point PointBuf = new Point();
+        GroupPoint GroupBuf = new GroupPoint();
         int countGroups = 0;
         int currentGroup = 0;
         OpenGL gl;
@@ -86,22 +89,21 @@ namespace ComputerGrafic
             gl.LoadIdentity();
 
             gl.PointSize(3.0f);
-
             gl.Begin(BeginMode.Points);
-
             float[] currColor = { 1.0f, 0.0f, 0.0f };
             for (int i = 0; i < GroupsPoints.Count(); i++)
             {
-                gl.Color(color[GroupsPoints[i].colorGroup][0], color[GroupsPoints[i].colorGroup][1], color[GroupsPoints[i].colorGroup][2]);
                 if (i == currentGroup) continue;
+                gl.Color(color[GroupsPoints[i].colorGroup][0], color[GroupsPoints[i].colorGroup][1], color[GroupsPoints[i].colorGroup][2]);
+
 
                 foreach (Point p in GroupsPoints[i].points)
                 {
                     gl.Vertex(p.x, p.y);
                 }
             }
-
             gl.End();
+
             gl.PointSize(5.0f);
             gl.Begin(BeginMode.Points);
             gl.Color(color[GroupsPoints[currentGroup].colorGroup][0], color[GroupsPoints[currentGroup].colorGroup][1], color[GroupsPoints[currentGroup].colorGroup][2]);
@@ -110,18 +112,28 @@ namespace ComputerGrafic
                 gl.Vertex(p.x, p.y);
             }
             gl.End();
+
             gl.Flush();
         }
 
         private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GroupPoint group = new GroupPoint();
-            group.points = GroupsPoints[currentGroup].points;
+            GroupBuf.points = GroupsPoints[currentGroup].points;
             if (colorComboBox.SelectedItem is ColorBox color_)
-                group.colorGroup = color_.idCol;
-            GroupsPoints[currentGroup] = group;
+                GroupBuf.colorGroup = color_.idCol;
+            GroupsPoints[currentGroup] = GroupBuf;
         }
 
+        private void GroupBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupBack();
+        }
+
+        private void GroupNextButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupNext();
+        }
+        
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             float x;
@@ -166,58 +178,61 @@ namespace ComputerGrafic
             {
                 for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
                 {
-                    Point p = new Point(GroupsPoints[currentGroup].points[i].x + 0.01f, GroupsPoints[currentGroup].points[i].y);
-                    GroupsPoints[currentGroup].points[i] = p;
+                    PointBuf.x = GroupsPoints[currentGroup].points[i].x + 0.01f;
+                    PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                    GroupsPoints[currentGroup].points[i] = PointBuf;
                 }
             }
             else if (e.Key == Key.Left)
             {
                 for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
                 {
-                    Point p = new Point(GroupsPoints[currentGroup].points[i].x - 0.01f, GroupsPoints[currentGroup].points[i].y);
-                    GroupsPoints[currentGroup].points[i] = p;
+                    PointBuf.x = GroupsPoints[currentGroup].points[i].x - 0.01f;
+                    PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                    GroupsPoints[currentGroup].points[i] = PointBuf;
                 }
             }
             else if (e.Key == Key.Up)
             {
                 for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
                 {
-                    Point p = new Point(GroupsPoints[currentGroup].points[i].x, GroupsPoints[currentGroup].points[i].y + 0.01f);
-                    GroupsPoints[currentGroup].points[i] = p;
+                    PointBuf.x = GroupsPoints[currentGroup].points[i].x;
+                    PointBuf.y = GroupsPoints[currentGroup].points[i].y + 0.01f;
+                    GroupsPoints[currentGroup].points[i] = PointBuf;
                 }
             }
             else if (e.Key == Key.Down)
             {
                 for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
                 {
-                    Point p = new Point(GroupsPoints[currentGroup].points[i].x, GroupsPoints[currentGroup].points[i].y - 0.01f);
-                    GroupsPoints[currentGroup].points[i] = p;
+                    PointBuf.x = GroupsPoints[currentGroup].points[i].x;
+                    PointBuf.y = GroupsPoints[currentGroup].points[i].y - 0.01f;
+                    GroupsPoints[currentGroup].points[i] = PointBuf;
                 }
             }
             else if (e.Key == Key.C)
             {
-                GroupPoint group = new GroupPoint();
-                group.points = GroupsPoints[currentGroup].points;
+                GroupBuf.points = GroupsPoints[currentGroup].points;
 
                 if (GroupsPoints[currentGroup].colorGroup < color.Length - 1)
-                    group.colorGroup = GroupsPoints[currentGroup].colorGroup + 1;
-                else group.colorGroup = 0;
-                GroupsPoints[currentGroup] = group;
+                    GroupBuf.colorGroup = GroupsPoints[currentGroup].colorGroup + 1;
+                else GroupBuf.colorGroup = 0;
+                GroupsPoints[currentGroup] = GroupBuf;
+                colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
             }
             else if (e.Key == Key.Q)
             {
                 if (countGroups > 0)
                 {
                     GroupsPoints.Remove(GroupsPoints[currentGroup]);
-                    if (currentGroup>0)
+                    if (currentGroup > 0)
                     {
                         countGroups--;
                         currentGroup--;
                     }
-                    else 
+                    else
                     {
                         countGroups--;
-                        //currentGroup++;
                     }
                 }
 
@@ -225,28 +240,36 @@ namespace ComputerGrafic
             else if (e.Key == Key.W)
             {
                 if (GroupsPoints[currentGroup].points.Count != 0)
-                GroupsPoints[currentGroup].points.Remove(GroupsPoints[currentGroup].points[GroupsPoints[currentGroup].points.Count - 1]);
+                    GroupsPoints[currentGroup].points.Remove(GroupsPoints[currentGroup].points[GroupsPoints[currentGroup].points.Count - 1]);
             }
             else if (e.Key == Key.A)
             {
-                if(GroupsPoints[countGroups].points.Count != 0)
-                {
-                    countGroups += 1;
-                    GroupsPoints.Add(new GroupPoint(greenInt));
-                }
-                if (currentGroup > 0)
-                {
-                    currentGroup--;
-                    colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
-                }
+                GroupBack();
             }
             else if (e.Key == Key.D)
-            { 
-                if (currentGroup < countGroups-1)
-                {
-                    currentGroup++;
-                    colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
-                }
+            {
+                GroupNext();
+            }
+        }
+        public void GroupBack()
+        {
+            if (GroupsPoints[countGroups].points.Count != 0)
+            {
+                countGroups += 1;
+                GroupsPoints.Add(new GroupPoint(greenInt));
+            }
+            if (currentGroup > 0)
+            {
+                currentGroup--;
+                colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
+            }
+        }
+        public void GroupNext()
+        {
+            if (currentGroup < countGroups - 1)
+            {
+                currentGroup++;
+                colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
             }
         }
     }
