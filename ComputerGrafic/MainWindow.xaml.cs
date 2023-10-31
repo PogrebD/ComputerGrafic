@@ -111,6 +111,7 @@ namespace ComputerGrafic
 
                 GroupsPoints[countGroups].points.Add(p);
             }
+            currentGroup = countGroups;
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
@@ -126,9 +127,12 @@ namespace ComputerGrafic
         {
             if (e.Key == Key.Space)
             {
-                countGroups += 1;
-                currentGroup = countGroups;
-                GroupsPoints.Add(new GroupPoint(greenInt));
+                if (GroupsPoints[countGroups].points.Count != 0)
+                {
+                    countGroups += 1;
+                    currentGroup = countGroups;
+                    GroupsPoints.Add(new GroupPoint(greenInt));
+                }
             }
             else if (e.Key == Key.Right)
             {
@@ -176,25 +180,40 @@ namespace ComputerGrafic
             {
                 if (countGroups > 0)
                 {
-                    GroupsPoints.Remove(GroupsPoints[currentGroup - 1]);
-                    countGroups--;
-                    currentGroup--;
+                    GroupsPoints.Remove(GroupsPoints[currentGroup]);
+                    if (currentGroup>0)
+                    {
+                        countGroups--;
+                        currentGroup--;
+                    }
+                    else 
+                    {
+                        countGroups--;
+                        //currentGroup++;
+                    }
                 }
+
             }
             else if (e.Key == Key.W)
             {
+                if (GroupsPoints[currentGroup].points.Count != 0)
                 GroupsPoints[currentGroup].points.Remove(GroupsPoints[currentGroup].points[GroupsPoints[currentGroup].points.Count - 1]);
             }
             else if (e.Key == Key.A)
             {
+                if(GroupsPoints[countGroups].points.Count != 0)
+                {
+                    countGroups += 1;
+                    GroupsPoints.Add(new GroupPoint(greenInt));
+                }
                 if (currentGroup > 0)
                 {
                     currentGroup--;
                 }
             }
             else if (e.Key == Key.D)
-            {
-                if (currentGroup < countGroups)
+            { 
+                if (currentGroup < countGroups-1)
                 {
                     currentGroup++;
                 }
