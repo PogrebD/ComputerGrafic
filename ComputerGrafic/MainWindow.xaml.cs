@@ -33,10 +33,12 @@ namespace ComputerGrafic
         public struct Point
         {
             public float x, y;
+            public int colorId;
             public Point(float x_, float y_)
             {
                 x = x_;
                 y = y_;
+                colorId = 0;
             }
         };
 
@@ -95,11 +97,9 @@ namespace ComputerGrafic
             for (int i = 0; i < GroupsPoints.Count(); i++)
             {
                 if (i == currentGroup) continue;
-                gl.Color(color[GroupsPoints[i].colorGroup][0], color[GroupsPoints[i].colorGroup][1], color[GroupsPoints[i].colorGroup][2]);
-
-
                 foreach (Point p in GroupsPoints[i].points)
                 {
+                    gl.Color(color[p.colorId][0], color[p.colorId][1], color[p.colorId][2]);
                     gl.Vertex(p.x, p.y);
                 }
             }
@@ -107,12 +107,11 @@ namespace ComputerGrafic
 
             gl.PointSize(5.0f);
             gl.Begin(BeginMode.Points);
-            gl.Color(color[GroupsPoints[currentGroup].colorGroup][0], color[GroupsPoints[currentGroup].colorGroup][1], color[GroupsPoints[currentGroup].colorGroup][2]);
             foreach (Point p in GroupsPoints[currentGroup].points)
             {
+                gl.Color(color[p.colorId][0], color[p.colorId][1], color[p.colorId][2]);
                 gl.Vertex(p.x, p.y);
             }
-
             gl.End();
 
             if (currentPimitive >= 0 && currentPimitive < GroupsPoints[currentGroup].points.Count())
@@ -125,14 +124,6 @@ namespace ComputerGrafic
                 gl.End();
             }
             gl.Flush();
-        }
-
-        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            GroupBuf.points = GroupsPoints[currentGroup].points;
-            if (colorComboBox.SelectedItem is ColorBox color_)
-                GroupBuf.colorGroup = color_.idCol;
-            GroupsPoints[currentGroup] = GroupBuf;
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -195,6 +186,20 @@ namespace ComputerGrafic
                 else GroupBuf.colorGroup = 0;
                 GroupsPoints[currentGroup] = GroupBuf;
                 colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
+                for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+                {
+                    PointBuf = GroupsPoints[currentGroup].points[i];
+                    PointBuf.colorId = GroupsPoints[currentGroup].colorGroup;
+                    GroupsPoints[currentGroup].points[i] = PointBuf;
+                }
+            }
+            else if (e.Key == Key.V)
+            {
+                if (GroupsPoints[currentGroup].points[currentPimitive].colorId < color.Length - 1)
+                    PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId + 1;
+                else PointBuf.colorId = 0;
+                PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
             }
             else if (e.Key == Key.Q)
             {
@@ -378,6 +383,13 @@ namespace ComputerGrafic
         private void GroupCreateButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) //!!!!
+        {
+            GroupBuf.points = GroupsPoints[currentGroup].points;
+            if (colorComboBox.SelectedItem is ColorBox color_)
+                GroupBuf.colorGroup = color_.idCol;
+            GroupsPoints[currentGroup] = GroupBuf;
         }
     }
 }
