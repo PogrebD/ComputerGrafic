@@ -22,12 +22,25 @@
             <TextBlock Text="Типа меню"/>
             <ComboBox x:Name="colorComboBox" SelectionChanged="ColorComboBox_SelectionChanged" />
             <TextBlock Text="Группа:" />
+            <Button x:Name="GroupCreateButton" Content="Создать группу"  HorizontalAlignment="Center"  Click="GroupCreateButton_Click"/>
             <Grid Height="20">
-                <Button x:Name="GroupBackButton" Content="Предыдущая" Width="82" RenderTransformOrigin="-0.291,0.835" HorizontalAlignment="Left" Click="GroupBackButton_Click"/>
-                <Button x:Name="GroupNextButton" Content="Следущая" Width="78" RenderTransformOrigin="0.54,-0.451" HorizontalAlignment="Right" Click="GroupNextButton_Click"/>
+                <Button x:Name="GroupBackButton" Content="Предыдущая" Width="82" HorizontalAlignment="Left" Click="GroupBackButton_Click"/>
+                <Button x:Name="GroupNextButton" Content="Следущая" Width="78" HorizontalAlignment="Right" Click="GroupNextButton_Click"/>
             </Grid>
-            <TextBlock Text="Типа кнопка2" />
-            <TextBlock Text="Типа кнопка3" />
+            <TextBlock Text="Перемещение:" />
+            <Button x:Name="GroupUpButton" Content="Вверх"  HorizontalAlignment="Center" Width="60" Click="GroupUpButton_Click"/>
+            <Grid Height="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="GroupLeftButton" Content="Влево"  HorizontalAlignment="Right" Width="60" Click="GroupLeftButton_Click"/>
+                <Button x:Name="GroupRightButton" Content="Вправо"  HorizontalAlignment="Left" Width="60" Click="GroupRightButton_Click" Grid.Column="1"/>
+            </Grid>
+            <Button x:Name="GroupDownButton" Content="Вниз"  HorizontalAlignment="Center" Width="60" Click="GroupDownButton_Click"/>
+            <TextBlock Text="Удаление:" />
+            <Button x:Name="GroupDeleteButton" Content="Удалить выбранную группу"  HorizontalAlignment="Left" Click="GroupDeleteButton_Click"/>
+            <Button x:Name="PrimitiveDeleteButton" Content="Удалить выбранный примитив"  HorizontalAlignment="Left" Click="PrimitiveDeleteButton_Click" FontSize="11"/>
             <TextBlock Text="Типа кнопка3" />
         </StackPanel>
 

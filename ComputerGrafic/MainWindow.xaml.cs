@@ -56,6 +56,7 @@ namespace ComputerGrafic
         GroupPoint GroupBuf = new GroupPoint();
         int countGroups = 0;
         int currentGroup = 0;
+        int currentPimitive = -1;
         OpenGL gl;
 
         public class ColorBox
@@ -111,8 +112,18 @@ namespace ComputerGrafic
             {
                 gl.Vertex(p.x, p.y);
             }
+
             gl.End();
 
+            if (currentPimitive >= 0 && currentPimitive < GroupsPoints[currentGroup].points.Count())
+            {
+                gl.PointSize(5.0f);
+                gl.Begin(BeginMode.Points);
+                gl.Color(1.0f, 1.0f, 1.0f);
+                gl.Vertex(GroupsPoints[currentGroup].points[currentPimitive].x, GroupsPoints[currentGroup].points[currentPimitive].y);
+
+                gl.End();
+            }
             gl.Flush();
         }
 
@@ -124,16 +135,6 @@ namespace ComputerGrafic
             GroupsPoints[currentGroup] = GroupBuf;
         }
 
-        private void GroupBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            GroupBack();
-        }
-
-        private void GroupNextButton_Click(object sender, RoutedEventArgs e)
-        {
-            GroupNext();
-        }
-        
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             float x;
@@ -151,6 +152,7 @@ namespace ComputerGrafic
                 GroupsPoints[countGroups].points.Add(p);
             }
             currentGroup = countGroups;
+            currentPimitive++;
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
@@ -166,49 +168,23 @@ namespace ComputerGrafic
         {
             if (e.Key == Key.Space)
             {
-                if (GroupsPoints[countGroups].points.Count != 0)
-                {
-                    countGroups += 1;
-                    currentGroup = countGroups;
-                    GroupsPoints.Add(new GroupPoint(greenInt));
-                    colorComboBox.SelectedIndex = 0;
-                }
+                GroupAdd();
             }
             else if (e.Key == Key.Right)
             {
-                for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
-                {
-                    PointBuf.x = GroupsPoints[currentGroup].points[i].x + 0.01f;
-                    PointBuf.y = GroupsPoints[currentGroup].points[i].y;
-                    GroupsPoints[currentGroup].points[i] = PointBuf;
-                }
+                GroupRight();
             }
             else if (e.Key == Key.Left)
             {
-                for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
-                {
-                    PointBuf.x = GroupsPoints[currentGroup].points[i].x - 0.01f;
-                    PointBuf.y = GroupsPoints[currentGroup].points[i].y;
-                    GroupsPoints[currentGroup].points[i] = PointBuf;
-                }
+                GroupLeft();
             }
             else if (e.Key == Key.Up)
             {
-                for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
-                {
-                    PointBuf.x = GroupsPoints[currentGroup].points[i].x;
-                    PointBuf.y = GroupsPoints[currentGroup].points[i].y + 0.01f;
-                    GroupsPoints[currentGroup].points[i] = PointBuf;
-                }
+                GroupUp();
             }
             else if (e.Key == Key.Down)
             {
-                for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
-                {
-                    PointBuf.x = GroupsPoints[currentGroup].points[i].x;
-                    PointBuf.y = GroupsPoints[currentGroup].points[i].y - 0.01f;
-                    GroupsPoints[currentGroup].points[i] = PointBuf;
-                }
+                GroupDown();
             }
             else if (e.Key == Key.C)
             {
@@ -222,46 +198,131 @@ namespace ComputerGrafic
             }
             else if (e.Key == Key.Q)
             {
-                if (countGroups > 0)
-                {
-                    GroupsPoints.Remove(GroupsPoints[currentGroup]);
-                    if (currentGroup > 0)
-                    {
-                        countGroups--;
-                        currentGroup--;
-                    }
-                    else
-                    {
-                        countGroups--;
-                    }
-                }
-
+                GroupDelete();
             }
             else if (e.Key == Key.W)
             {
-                if (GroupsPoints[currentGroup].points.Count != 0)
-                    GroupsPoints[currentGroup].points.Remove(GroupsPoints[currentGroup].points[GroupsPoints[currentGroup].points.Count - 1]);
+                PrimitiveDelete();
             }
             else if (e.Key == Key.A)
             {
                 GroupBack();
             }
-            else if (e.Key == Key.D)
+            else if (e.Key == Key.S)
             {
                 GroupNext();
             }
+            else if (e.Key == Key.D)
+            {
+                PrimitiveBack();
+            }
+            else if (e.Key == Key.F)
+            {
+                PrimitiveNext();
+            }
         }
-        public void GroupBack()
+
+        public void GroupAdd()
         {
             if (GroupsPoints[countGroups].points.Count != 0)
             {
                 countGroups += 1;
+                currentGroup = countGroups;
                 GroupsPoints.Add(new GroupPoint(greenInt));
+                colorComboBox.SelectedIndex = 0;
+                currentPimitive = -1;
+            }
+        }
+        public void GroupRight()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[i].x + 0.01f;
+                PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                GroupsPoints[currentGroup].points[i] = PointBuf;
+            }
+        }
+        public void GroupLeft()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[i].x - 0.01f;
+                PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                GroupsPoints[currentGroup].points[i] = PointBuf;
+            }
+        }
+        public void GroupUp()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[i].x;
+                PointBuf.y = GroupsPoints[currentGroup].points[i].y + 0.01f;
+                GroupsPoints[currentGroup].points[i] = PointBuf;
+            }
+        }
+        public void GroupDown()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[i].x;
+                PointBuf.y = GroupsPoints[currentGroup].points[i].y - 0.01f;
+                GroupsPoints[currentGroup].points[i] = PointBuf;
+            }
+        }
+        public void GroupDelete()
+        {
+            if (countGroups > 0)
+            {
+                GroupsPoints.Remove(GroupsPoints[currentGroup]);
+                if (currentGroup > 0)
+                {
+                    countGroups--;
+                    currentGroup--;
+                }
+                else
+                {
+                    countGroups--;
+                }
+                if (countGroups == 0)
+                    currentPimitive = -1;
+                else
+                    currentPimitive = 0;
+            }
+        }
+        public void PrimitiveDelete()
+        {
+            if (currentPimitive >= 0 && GroupsPoints[currentGroup].points.Count > 0)
+            {
+                GroupsPoints[currentGroup].points.Remove(GroupsPoints[currentGroup].points[currentPimitive]);
+                if (currentPimitive > 0)
+                    currentPimitive--;
+            }
+        }
+
+        public void PrimitiveBack()
+        {
+            if (currentPimitive > 0)
+                currentPimitive--;
+        }
+        public void PrimitiveNext()
+        {
+            if (currentPimitive < GroupsPoints[currentGroup].points.Count() - 1)
+                currentPimitive++;
+        }
+
+        public void GroupBack()
+        {
+            if (GroupsPoints[countGroups].points.Count != 0)
+            {
+                countGroups++;
+                GroupsPoints.Add(new GroupPoint(greenInt));
+                currentPimitive = 0;
             }
             if (currentGroup > 0)
             {
                 currentGroup--;
                 colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
+                currentPimitive = 0;
             }
         }
         public void GroupNext()
@@ -270,7 +331,53 @@ namespace ComputerGrafic
             {
                 currentGroup++;
                 colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
+                currentPimitive = 0;
             }
+        }
+
+        private void GroupBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupBack();
+        }
+
+        private void GroupNextButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupNext();
+        }
+
+        private void GroupDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PrimitiveDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GroupDownButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GroupRightButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GroupLeftButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GroupUpButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GroupCreateButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
