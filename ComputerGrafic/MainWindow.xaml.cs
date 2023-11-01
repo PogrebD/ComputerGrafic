@@ -68,6 +68,13 @@ namespace ComputerGrafic
             public override string ToString() => $"{col}";
         }
 
+        public class PColorBox
+        {
+            public string col { get; set; } = "";
+            public int idCol { get; set; }
+            public override string ToString() => $"{col}";
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -82,13 +89,13 @@ namespace ComputerGrafic
         };
             colorComboBox.SelectedIndex = 0;
 
-            PrimitivecolorComboBox.ItemsSource = new ColorBox[]
-{
-            new ColorBox { col = "Зеленый", idCol = 0},
-            new ColorBox { col = "Синий", idCol = 1},
-            new ColorBox { col = "Желтый", idCol = 2},
-            new ColorBox { col = "Красный", idCol = 3}
-};
+            PrimitivecolorComboBox.ItemsSource = new PColorBox[]
+        {
+            new PColorBox { col = "Зеленый", idCol = 0},
+            new PColorBox { col = "Синий", idCol = 1},
+            new PColorBox { col = "Желтый", idCol = 2},
+            new PColorBox { col = "Красный", idCol = 3}
+        };
             PrimitivecolorComboBox.SelectedIndex = 0;
         }
 
@@ -202,6 +209,7 @@ namespace ComputerGrafic
                     PointBuf.colorId = GroupsPoints[currentGroup].colorGroup;
                     GroupsPoints[currentGroup].points[i] = PointBuf;
                 }
+                PrimitivecolorComboBox.SelectedIndex = PointBuf.colorId;
             }
             else if (e.Key == Key.V)
             {
@@ -209,8 +217,11 @@ namespace ComputerGrafic
                 if (GroupsPoints[currentGroup].points[currentPimitive].colorId < color.Length - 1)
                     PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId + 1;
                 else PointBuf.colorId = 0;
+                int c = PointBuf.colorId;
+                PrimitivecolorComboBox.SelectedIndex = c;
+                PointBuf.colorId = c;
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
-                PrimitivecolorComboBox.SelectedIndex = GroupsPoints[currentGroup].points[currentPimitive].colorId;
+
             }
             else if (e.Key == Key.Q)
             {
@@ -367,9 +378,9 @@ namespace ComputerGrafic
 
         public void PrimitiveRight()
         {
-                PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x + 0.01f;
-                PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
-                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+            PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x + 0.01f;
+            PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
+            GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
         }
         public void PrimitiveLeft()
         {
@@ -444,7 +455,7 @@ namespace ComputerGrafic
             GroupAdd();
         }
         private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        { 
+        {
             GroupBuf.points = GroupsPoints[currentGroup].points;
 
             if (colorComboBox.SelectedItem is ColorBox color_)
@@ -457,6 +468,7 @@ namespace ComputerGrafic
                 PointBuf.colorId = GroupsPoints[currentGroup].colorGroup;
                 GroupsPoints[currentGroup].points[i] = PointBuf;
             }
+            PrimitivecolorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
         }
 
         private void PrimitiveBackButton_Click(object sender, RoutedEventArgs e)
@@ -474,10 +486,12 @@ namespace ComputerGrafic
             if (currentPimitive >= 0)
             {
                 PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
-                if (colorComboBox.SelectedItem is ColorBox color_)
+                if (PrimitivecolorComboBox.SelectedItem is PColorBox color_)
                     PointBuf.colorId = color_.idCol;
+                int c = PointBuf.colorId;
+                PrimitivecolorComboBox.SelectedIndex = c;
+                PointBuf.colorId = c;
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
-                PrimitivecolorComboBox.SelectedIndex = GroupsPoints[currentGroup].points[currentPimitive].colorId;
             }
         }
 
