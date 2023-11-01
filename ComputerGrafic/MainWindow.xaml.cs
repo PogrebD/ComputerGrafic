@@ -34,11 +34,11 @@ namespace ComputerGrafic
         {
             public float x, y;
             public int colorId;
-            public Point(float x_, float y_)
+            public Point(float x_, float y_, int colorId_)
             {
                 x = x_;
                 y = y_;
-                colorId = 0;
+                colorId = colorId_;
             }
         };
 
@@ -81,6 +81,15 @@ namespace ComputerGrafic
             new ColorBox { col = "Красный", idCol = 3}
         };
             colorComboBox.SelectedIndex = 0;
+
+            PrimitivecolorComboBox.ItemsSource = new ColorBox[]
+{
+            new ColorBox { col = "Зеленый", idCol = 0},
+            new ColorBox { col = "Синий", idCol = 1},
+            new ColorBox { col = "Желтый", idCol = 2},
+            new ColorBox { col = "Красный", idCol = 3}
+};
+            PrimitivecolorComboBox.SelectedIndex = 0;
         }
 
         private void OpenGLControl_OpenGLDraw(object sender, OpenGLRoutedEventArgs args)
@@ -128,6 +137,7 @@ namespace ComputerGrafic
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            currentGroup = countGroups;
             float x;
             float y;
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -138,12 +148,12 @@ namespace ComputerGrafic
                 x = (2.0f * x / (float)OpenglControl_.ActualWidth) - 1.0f;
                 y = (0.5f - (y / (float)OpenglControl_.ActualHeight)) * 2;
 
-                Point p = new Point(x, y);
+                Point p = new Point(x, y, GroupsPoints[currentGroup].colorGroup);
 
                 GroupsPoints[countGroups].points.Add(p);
             }
-            currentGroup = countGroups;
-            currentPimitive++;
+
+            currentPimitive = GroupsPoints[currentGroup].points.Count - 1;
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
@@ -195,11 +205,12 @@ namespace ComputerGrafic
             }
             else if (e.Key == Key.V)
             {
+                PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
                 if (GroupsPoints[currentGroup].points[currentPimitive].colorId < color.Length - 1)
                     PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId + 1;
                 else PointBuf.colorId = 0;
-                PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+                PrimitivecolorComboBox.SelectedIndex = GroupsPoints[currentGroup].points[currentPimitive].colorId;
             }
             else if (e.Key == Key.Q)
             {
@@ -224,6 +235,22 @@ namespace ComputerGrafic
             else if (e.Key == Key.F)
             {
                 PrimitiveNext();
+            }
+            else if (e.Key == Key.I)
+            {
+                PrimitiveUp();
+            }
+            else if (e.Key == Key.J)
+            {
+                PrimitiveLeft();
+            }
+            else if (e.Key == Key.L)
+            {
+                PrimitiveRight();
+            }
+            else if (e.Key == Key.K)
+            {
+                PrimitiveDown();
             }
         }
 
@@ -288,11 +315,9 @@ namespace ComputerGrafic
                 {
                     countGroups--;
                 }
-                if (countGroups == 0)
-                    currentPimitive = -1;
-                else
-                    currentPimitive = 0;
+                currentPimitive = GroupsPoints[currentGroup].points.Count - 1;
             }
+
         }
         public void PrimitiveDelete()
         {
@@ -340,6 +365,41 @@ namespace ComputerGrafic
             }
         }
 
+        public void PrimitiveRight()
+        {
+                PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x + 0.01f;
+                PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+        }
+        public void PrimitiveLeft()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x - 0.01f;
+                PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+            }
+        }
+        public void PrimitiveUp()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+
+                PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x;
+                PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y + 0.01f;
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+            }
+        }
+        public void PrimitiveDown()
+        {
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x;
+                PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y - 0.01f;
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+            }
+        }
+
         private void GroupBackButton_Click(object sender, RoutedEventArgs e)
         {
             GroupBack();
@@ -352,44 +412,96 @@ namespace ComputerGrafic
 
         private void GroupDeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GroupDelete();
         }
 
         private void PrimitiveDeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void GroupDownButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            PrimitiveDelete();
         }
 
         private void GroupRightButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GroupRight();
         }
 
         private void GroupLeftButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GroupLeft();
         }
 
         private void GroupUpButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GroupUp();
+        }
+        private void GroupDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupDown();
         }
 
         private void GroupCreateButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GroupAdd();
         }
-        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) //!!!!
-        {
+        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        { 
             GroupBuf.points = GroupsPoints[currentGroup].points;
+
             if (colorComboBox.SelectedItem is ColorBox color_)
                 GroupBuf.colorGroup = color_.idCol;
             GroupsPoints[currentGroup] = GroupBuf;
+            colorComboBox.SelectedIndex = GroupsPoints[currentGroup].colorGroup;
+            for (int i = 0; i < GroupsPoints[currentGroup].points.Count; i++)
+            {
+                PointBuf = GroupsPoints[currentGroup].points[i];
+                PointBuf.colorId = GroupsPoints[currentGroup].colorGroup;
+                GroupsPoints[currentGroup].points[i] = PointBuf;
+            }
+        }
+
+        private void PrimitiveBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveBack();
+        }
+
+        private void PrimitiveNextButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveNext();
+        }
+
+        private void PrimitiveColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (currentPimitive >= 0)
+            {
+                PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
+                if (colorComboBox.SelectedItem is ColorBox color_)
+                    PointBuf.colorId = color_.idCol;
+                GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
+                PrimitivecolorComboBox.SelectedIndex = GroupsPoints[currentGroup].points[currentPimitive].colorId;
+            }
+        }
+
+        private void PrimitiveUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveUp();
+        }
+
+        private void PrimitiveLeftButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveLeft();
+        }
+
+        private void PrimitiveRightButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveRight();
+        }
+
+        private void PrimitiveDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrimitiveDown();
         }
     }
 }
+
+// сделать перемещение точе
+// сделать меню изменения цвета груп и точе
