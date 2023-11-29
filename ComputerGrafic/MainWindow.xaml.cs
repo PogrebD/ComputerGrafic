@@ -282,6 +282,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[i].x + 0.01f;
                 PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[i].colorId;
                 GroupsPoints[currentGroup].points[i] = PointBuf;
             }
         }
@@ -291,6 +292,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[i].x - 0.01f;
                 PointBuf.y = GroupsPoints[currentGroup].points[i].y;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[i].colorId;
                 GroupsPoints[currentGroup].points[i] = PointBuf;
             }
         }
@@ -300,6 +302,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[i].x;
                 PointBuf.y = GroupsPoints[currentGroup].points[i].y + 0.01f;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[i].colorId;
                 GroupsPoints[currentGroup].points[i] = PointBuf;
             }
         }
@@ -309,6 +312,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[i].x;
                 PointBuf.y = GroupsPoints[currentGroup].points[i].y - 0.01f;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[i].colorId;
                 GroupsPoints[currentGroup].points[i] = PointBuf;
             }
         }
@@ -380,6 +384,7 @@ namespace ComputerGrafic
         {
             PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x + 0.01f;
             PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
+            PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId;
             GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
         }
         public void PrimitiveLeft()
@@ -388,6 +393,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x - 0.01f;
                 PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId;
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
             }
         }
@@ -398,6 +404,7 @@ namespace ComputerGrafic
 
                 PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x;
                 PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y + 0.01f;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId;
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
             }
         }
@@ -407,6 +414,7 @@ namespace ComputerGrafic
             {
                 PointBuf.x = GroupsPoints[currentGroup].points[currentPimitive].x;
                 PointBuf.y = GroupsPoints[currentGroup].points[currentPimitive].y - 0.01f;
+                PointBuf.colorId = GroupsPoints[currentGroup].points[currentPimitive].colorId;
                 GroupsPoints[currentGroup].points[currentPimitive] = PointBuf;
             }
         }
@@ -483,7 +491,7 @@ namespace ComputerGrafic
 
         private void PrimitiveColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (currentPimitive >= 0)
+            if (currentPimitive >= 0 && GroupsPoints[currentGroup].points.Count >= currentPimitive)
             {
                 PointBuf = GroupsPoints[currentGroup].points[currentPimitive];
                 if (PrimitivecolorComboBox.SelectedItem is PColorBox color_)
