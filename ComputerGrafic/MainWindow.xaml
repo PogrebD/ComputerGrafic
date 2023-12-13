@@ -20,36 +20,68 @@
         </Grid.ColumnDefinitions>
         <StackPanel Background="White" Grid.Column="1" Grid.ColumnSpan="2">
             <TextBlock Text="Типа меню"/>
-            
-            <TextBlock Text="Группа:" />
-            <Button x:Name="GroupCreateButton" Content="Создать группу"  HorizontalAlignment="Center"  Click="GroupCreateButton_Click"/>
-            <Grid Height="20">
-                <Button x:Name="GroupBackButton" Content="Предыдущая" Width="82" HorizontalAlignment="Left" Click="GroupBackButton_Click"/>
-                <Button x:Name="GroupNextButton" Content="Следущая" Width="78" HorizontalAlignment="Right" Click="GroupNextButton_Click"/>
-            </Grid>
-            <ComboBox x:Name="colorComboBox" SelectionChanged="ColorComboBox_SelectionChanged"/>
-            <TextBlock Text="Перемещение группы:" />
-            <Button x:Name="GroupUpButton" Content="Вверх"  HorizontalAlignment="Center" Width="60" Click="GroupUpButton_Click"/>
-            <Grid Height="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="GroupLeftButton" Content="Влево"  HorizontalAlignment="Right" Width="60" Click="GroupLeftButton_Click"/>
-                <Button x:Name="GroupRightButton" Content="Вправо"  HorizontalAlignment="Left" Width="60" Click="GroupRightButton_Click" Grid.Column="1"/>
-            </Grid>
-            <Button x:Name="GroupDownButton" Content="Вниз"  HorizontalAlignment="Center" Width="60" Click="GroupDownButton_Click"/>
-            <TextBlock Text="Удаление:" />
-            <Button x:Name="GroupDeleteButton" Content="Удалить выбранную группу"  HorizontalAlignment="Left" Click="GroupDeleteButton_Click"/>
-            <Button x:Name="PrimitiveDeleteButton" Content="Удалить выбранный примитив"  HorizontalAlignment="Left" Click="PrimitiveDeleteButton_Click" FontSize="11"/>
-            <TextBlock Text="Точка:" />
-            <Grid Height="20">
-                <Button x:Name="PrimitiveBackButton" Content="Предыдущая" Width="82" HorizontalAlignment="Left" Click="PrimitiveBackButton_Click"/>
-                <Button x:Name="PrimitiveNextButton" Content="Следущая" Width="78" HorizontalAlignment="Right" Click="PrimitiveNextButton_Click"/>
-            </Grid>
-            <ComboBox x:Name="PrimitivecolorComboBox" SelectionChanged="PrimitiveColorComboBox_SelectionChanged"/>
-            <TextBlock Text="Перемещение точки:" />
-            <Button x:Name="PrimitiveUpButton" Content="Вверх"  HorizontalAlignment="Center" Width="60" Click="PrimitiveUpButton_Click"/>
+
+
+            <GroupBox Header="Группа:" BorderThickness="2,2,2,2" >
+                <GroupBox.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </GroupBox.BorderBrush>
+                <StackPanel>
+                    <Button x:Name="GroupCreateButton" Content="Создать группу"  HorizontalAlignment="Center"  Click="GroupCreateButton_Click"/>
+                    <Grid Height="20">
+                        <Button x:Name="GroupBackButton" Content="Предыдущая" Width="77" HorizontalAlignment="Left" Click="GroupBackButton_Click"/>
+                        <Button x:Name="GroupNextButton" Content="Следущая" Width="74" HorizontalAlignment="Left" Click="GroupNextButton_Click" Margin="74,0,0,0"/>
+                    </Grid>
+                    <ComboBox x:Name="colorComboBox" SelectionChanged="ColorComboBox_SelectionChanged"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Перемещение группы:" BorderThickness="2,2,2,2">
+                <GroupBox.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </GroupBox.BorderBrush>
+                <StackPanel>
+
+                    <Button x:Name="GroupUpButton" Content="Вверх"  HorizontalAlignment="Center" Width="60" Click="GroupUpButton_Click"/>
+                    <Grid Height="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="GroupLeftButton" Content="Влево"  HorizontalAlignment="Right" Width="60" Click="GroupLeftButton_Click"/>
+                        <Button x:Name="GroupRightButton" Content="Вправо"  HorizontalAlignment="Left" Width="60" Click="GroupRightButton_Click" Grid.Column="1"/>
+                    </Grid>
+                    <Button x:Name="GroupDownButton" Content="Вниз"  HorizontalAlignment="Center" Width="60" Click="GroupDownButton_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Удаление:" BorderThickness="2,2,2,2">
+                <GroupBox.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </GroupBox.BorderBrush>
+                <StackPanel>
+                    <Button x:Name="GroupDeleteButton" Content="Удалить выбранную группу"  HorizontalAlignment="Left" Click="GroupDeleteButton_Click" FontSize="11"/>
+                    <Button x:Name="PrimitiveDeleteButton" Content="Удалить выбранный примитив"  HorizontalAlignment="Left" Click="PrimitiveDeleteButton_Click" FontSize="10"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Точка:" BorderThickness="2,2,2,2">
+                <GroupBox.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </GroupBox.BorderBrush>
+                <StackPanel>
+                    <Grid Height="20">
+                        <Button x:Name="PrimitiveBackButton" Content="Предыдущая" Width="74" HorizontalAlignment="Left" Click="PrimitiveBackButton_Click"/>
+                        <Button x:Name="PrimitiveNextButton" Content="Следущая" Width="74" HorizontalAlignment="Left" Click="PrimitiveNextButton_Click" Margin="74,0,0,0"/>
+                    </Grid>
+                    <ComboBox x:Name="PrimitivecolorComboBox" SelectionChanged="PrimitiveColorComboBox_SelectionChanged"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Перемещение точки:" BorderThickness="2,2,2,2">
+                <GroupBox.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </GroupBox.BorderBrush>
+                <StackPanel>
+                    <Button x:Name="PrimitiveUpButton" Content="Вверх"  HorizontalAlignment="Center" Width="60" Click="PrimitiveUpButton_Click"/>
             <Grid Height="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"></ColumnDefinition>
@@ -59,6 +91,8 @@
                 <Button x:Name="PrimitiveRightButton" Content="Вправо"  HorizontalAlignment="Left" Width="60" Click="PrimitiveRightButton_Click" Grid.Column="1"/>
             </Grid>
             <Button x:Name="PrimitiveDownButton" Content="Вниз"  HorizontalAlignment="Center" Width="60" Click="PrimitiveDownButton_Click"/>
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
 
         <sharpGL:OpenGLControl BorderBrush="Gray" MouseDown="Grid_MouseDown" x:Name ="OpenglControl_" OpenGLDraw="OpenGLControl_OpenGLDraw" OpenGLInitialized="OpenGLControl_OpenGLInitialized" Resized="OpenGLControl_Resized" Foreground="#FFFFFDFD" Background="White"/>
